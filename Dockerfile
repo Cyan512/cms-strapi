@@ -1,15 +1,27 @@
-FROM node:18
+FROM node:20-alpine
 
+# Set working directory
 WORKDIR /app
 
-COPY ./app/package.json ./app/yarn.lock ./
+# Copy package files
+COPY package*.json ./
 
-RUN yarn install
+# Install dependencies
+RUN npm ci --only=production
 
-COPY ./app .
+# Copy application code
+COPY . .
 
-RUN yarn build
+# Build the admin panel
+RUN npm run build
 
+# Expose port
 EXPOSE 1337
 
-CMD ["yarn", "start"]
+# Set environment variables
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=1337
+
+# Start the application
+CMD ["npm", "run", "start"]

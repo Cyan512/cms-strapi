@@ -3,34 +3,20 @@ version: '3.8'
 services:
   strapi:
     build: .
-    container_name: strapi_app
-    restart: unless-stopped
-    env_file: .env
-    environment:
-      DATABASE_CLIENT: postgres
-      DATABASE_HOST: db
-      DATABASE_PORT: 5432
-      DATABASE_NAME: strapi
-      DATABASE_USERNAME: strapi
-      DATABASE_PASSWORD: strapi
-      NODE_ENV: production
     ports:
       - "1337:1337"
-    depends_on:
-      - db
     volumes:
-      - ./app:/app
-
-  db:
-    image: postgres:15
-    container_name: strapi_db
-    restart: unless-stopped
+      - ./src:/app/src
+      - ./.tmp:/app/.tmp
+      - ./package.json:/app/package.json
+      - ./package-lock.json:/app/package-lock.json
     environment:
-      POSTGRES_DB: strapi
-      POSTGRES_USER: strapi
-      POSTGRES_PASSWORD: strapi
-    volumes:
-      - strapi-data:/var/lib/postgresql/data
-
-volumes:
-  strapi-data:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=1337
+      - APP_KEYS=yzQvSsB7XhbvBQKGrF2MtQ==,3p6vWuo33m3WJ2mJXvRyPA==,FXnqC045XsPoV9ofAX1mdQ==,IgGTzeB/67sctb4Btw6J4Q==
+      - API_TOKEN_SALT=vbcKcwi5vFjcYQBmzLA4NQ==
+      - ADMIN_JWT_SECRET=8bd/tPCvHer8RhFPgTy5Sg==
+      - TRANSFER_TOKEN_SALT=5ikgINQzpV3qlhLSiTAj2g==
+      - ENCRYPTION_KEY=KEjxQqCyTF3XjWNYNidXVw==
+    restart: unless-stopped
